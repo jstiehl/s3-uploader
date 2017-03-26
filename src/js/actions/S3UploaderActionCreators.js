@@ -9,8 +9,8 @@ var S3UploaderActionCreator = {
    * @param  {String} month is the month of interest
    * @return {Action} dispatches with monthyl_data_received action typ and monthly weather data
    */
-  fetchAWSSignature: function(type) {
-    request.get(API_URL + 'awssignature?type='+type)
+  fetchAWSCredentials: function(type) {
+    request.get(API_URL + 'awscredentials?type='+type)
       .end(function(err, res){
         var data = res.body.data;
         if(err) {
@@ -18,19 +18,19 @@ var S3UploaderActionCreator = {
           console.log(err);
         }
         var action = {
-          type: 'aws_signature_received',
+          type: 'aws_credentials_received',
           data: data
         };
         AppDispatcher.dispatch(action);
       });
   },
 
-  uploadToS3: function(data, bucket, fileId) {
+  uploadToS3: function(data, bucket) {
     var url = 'https://' + bucket + '.s3.amazonaws.com/';
     var xhr = new XMLHttpRequest();
     xhr.open('post', url);
+    //track upload progress
     var updateProgress = function(e) {
-      console.log(e)
       var percentage = Math.round((e.loaded/e.total)*100);
       var action = {
         type: 'aws_upload_progress',
@@ -39,6 +39,7 @@ var S3UploaderActionCreator = {
       AppDispatcher.dispatch(action);
     };
     xhr.upload.addEventListener("progress", updateProgress);
+    
     xhr.onreadystatechange = function () {
       if (xhr.readyState === 4) {
         if (xhr.status >= 400) {

@@ -6,9 +6,9 @@ var Spinner = require('react-spinkit');
 var S3UploaderActionCreators = require('../actions/S3UploaderActionCreators');
 
 /**
- * S3Uploader component receives props with month and weather data
- * It calculates some statistics based on the daily data and tabulates the results
- * TODO figure out how to make a box plot of daily data for the month. d3?
+ * S3Uploader component receives props with upload data
+ * when a file is selected, the component makes an api call to receive the appropriate
+ * credentials necessary for uploading the file to s3
  */
 var S3Uploader = React.createClass({
 
@@ -31,10 +31,10 @@ var S3Uploader = React.createClass({
   render: function() {
     return (
       <div>
-        <h1>S3 File Uploader</h1>
+        <h3>Select file to upload to s3</h3>
         <form encType="multipart/form-data" className="_file-upload" onSubmit={this._onSubmit}>
-          <input onChange={this._fileSelected} type="file" name="upload_file" />
-          <button type='submit' disabled={!this.state.file}>Upload File</button>
+          <input onChange={this._fileSelected} type="file" name="upload_file" className="_choose-file"/>
+          <button type='submit' disabled={!this.state.file} className="_upload-button">Upload File</button>
         </form>
         {this._spinner()}
       </div>
@@ -47,7 +47,7 @@ var S3Uploader = React.createClass({
         <div className="_spinner">
           Upload In Progress
           <Spinner spinnerName='wordpress' noFadeIn />
-          {this.props.progress}
+          {this.props.progress + '%'}
         </div>
       );
     }
@@ -55,17 +55,17 @@ var S3Uploader = React.createClass({
 
   _onSubmit: function(e) {
     e.preventDefault();
-    if (!this.props.signature) {
-      this._fetchSignature(this.state.fileType);
+    if (!this.props.credentials) {
+      this._fetchCredentials(this.state.fileType);
     }
     else {
       e.target.upload_file.value = null; //remove the file name from the input display
-      this._uploadToS3(this.props.signature);
+      this._uploadToS3(this.props.credentials);
     }
   },
 
   _uploadToS3: function(creds) {
-    creds = creds || this.props.signature;
+    creds = creds || this.props.credentials;
     if (this.state.file) {
       var data = new FormData();
       data.append('key', creds.path + this.state.fileName);
@@ -93,13 +93,13 @@ var S3Uploader = React.createClass({
       fileType: fileType,
       fileName: file.name
     });
-    if(!this.props.signature){
-      this._fetchSignature(fileType);
+    if(!this.props.credentials){
+      this._fetchCredentials(fileType);
     }
   },
 
-  _fetchSignature: function(fileType) {
-    S3UploaderActionCreators.fetchAWSSignature(fileType);
+  _fetchCredentials: function(fileType) {
+    S3UploaderActionCreators.fetchAWSCredentials(fileType);
   }
 });
 

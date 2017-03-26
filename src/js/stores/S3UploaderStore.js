@@ -26,7 +26,7 @@ var S3UploaderStore = assign({}, EventEmitter.prototype, {
     _credentials = data;
   },
 
-  getSignature: function() {
+  getCredentials: function() {
     return _credentials;
   },
 
@@ -41,7 +41,7 @@ var S3UploaderStore = assign({}, EventEmitter.prototype, {
 
 S3UploaderStore.dispatchToken = AppDispatcher.register(function(payload){
   switch (payload.type) {
-    case 'aws_signature_received':
+    case 'aws_credentials_received':
       S3UploaderStore._credentialsReceived(payload.data);
       S3UploaderStore.emitChange();
       break;
