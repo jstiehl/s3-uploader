@@ -38,6 +38,25 @@ form._file-upload {
   padding-left: 0;
 }
 
+._errorNotification {
+  border-top: solid 5px red;
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+}
+
+._dismissError {
+  position: absolute;
+  top: 0;
+  right: 0;
+  padding-top: 5px;
+  padding-right: 5px;
+}
+
+._dismissError:hover {
+  cursor: pointer;
+}
+
 @keyframes App-logo-spin {
   from { transform: rotate(0deg); }
   to { transform: rotate(360deg); }

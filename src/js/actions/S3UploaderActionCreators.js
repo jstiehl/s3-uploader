@@ -12,12 +12,16 @@ var S3UploaderActionCreator = {
   fetchAWSCredentials: function(type) {
     request.get(API_URL + 'awscredentials?type='+type)
       .end(function(err, res){
+        var action;
         var data = res.body.data;
         if(err) {
-          //need to add error handling
-          console.log(err);
+          action = {
+            type: 'api_error'
+          };
+          AppDispatcher.dispatch(action);
+          return;
         }
-        var action = {
+        action = {
           type: 'aws_credentials_received',
           data: data
         };
@@ -41,12 +45,16 @@ var S3UploaderActionCreator = {
     xhr.upload.addEventListener("progress", updateProgress);
     
     xhr.onreadystatechange = function () {
+      var action;
       if (xhr.readyState === 4) {
         if (xhr.status >= 400) {
-          //need to add error handling
-          console.log("Error");
+          action = {
+            type: 'api_error'
+          };
+          AppDispatcher.dispatch(action);
+          return;
         }
-        var action = {
+        action = {
           type: 'aws_upload_complete'
         };
         AppDispatcher.dispatch(action);

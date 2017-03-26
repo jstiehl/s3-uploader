@@ -1,5 +1,6 @@
 var React = require('react');
 var S3UploaderContainer = require('./js/components/S3UploaderContainer.react');
+var ErrorContainer = require('./js/components/ErrorContainer.react');
 
 import './App.css';
 import logo from './rain-cloud.svg';
@@ -15,6 +16,7 @@ var App = React.createClass ({
         <div className="App-intro">
           <S3UploaderContainer />
         </div>
+        <ErrorContainer />
       </div>
     );
   }

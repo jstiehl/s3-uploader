@@ -51,6 +51,7 @@ S3UploaderStore.dispatchToken = AppDispatcher.register(function(payload){
       S3UploaderStore.emitChange();
       break;
     case 'aws_upload_complete':
+    case 'api_error':
       _uploadProgress = null;
       _uploadInProgress = false;
       _credentials = null;
