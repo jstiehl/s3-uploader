@@ -6,12 +6,6 @@ var Spinner = require('react-spinkit');
 var S3UploaderActionCreators = require('../actions/S3UploaderActionCreators');
 
 /**
- * Constants
- */ 
-var BUCKET = "squishymedia";
-/** ==================================================================================================== */
-
-/**
  * S3Uploader component receives props with month and weather data
  * It calculates some statistics based on the daily data and tabulates the results
  * TODO figure out how to make a box plot of daily data for the month. d3?
@@ -78,7 +72,7 @@ var S3Uploader = React.createClass({
       data.append('Content-Type', this.state.fileType);
       data.append('acl', 'bucket-owner-full-control');
       data.append('x-amz-server-side-encryption', 'AES256');
-      data.append('x-amz-credential', creds.key_id + '/' + moment(creds.date).utc().format('YYYYMMDD') + '/us-west-2/s3/aws4_request');
+      data.append('x-amz-credential', creds.key_id + '/' + moment(creds.date).utc().format('YYYYMMDD') + '/' + creds.region + '/s3/aws4_request');
       data.append('x-amz-algorithm', 'AWS4-HMAC-SHA256');
       data.append('x-amz-date', creds.date);
       data.append('x-amz-meta-tag', '');
@@ -86,7 +80,7 @@ var S3Uploader = React.createClass({
       data.append('x-amz-signature', creds.signature);
       data.append('file', this.state.file);
 
-      S3UploaderActionCreators.uploadToS3(data, BUCKET);
+      S3UploaderActionCreators.uploadToS3(data, creds.bucket);
     }
   },
 
