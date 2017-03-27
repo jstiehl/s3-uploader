@@ -5,9 +5,9 @@ var API_URL = config.API_URL;
 
 var S3UploaderActionCreator = {
   /**
-   * fetchMonthlyWeatherData makes api call to server to fetch monthly weather data
-   * @param  {String} month is the month of interest
-   * @return {Action} dispatches with monthyl_data_received action typ and monthly weather data
+   * fetchAWSCredentials makes api call to server to fetch monthly weather data
+   * @param  {String} type is the file type being uploaded
+   * @return {Action} dispatches with aws_credentials_received action type and aws credentials needed for browser based POST
    */
   fetchAWSCredentials: function(type) {
     request.get(API_URL + 'awscredentials?type='+type)
